@@ -159,7 +159,11 @@ function _deploy_requirements($cnf = array()) {
   }
 
   if ($error) {
-    die('Requirement Errors! Check the deploy log.');
+    die('[requirements] Requirement Errors! Check the deploy log.');
+  }
+
+  if ($cnf['debug']) {
+    _deploy_log('[requirements] Passed Requirement Checks.');
   }
 
   return TRUE;

@@ -21,8 +21,7 @@ function gitpull_deploy($cnf = array()) {
   $output[] = 'User: '. shell_exec('whoami'); // Log the script user.
 
   $output[] = '# git status -sb #';
-  exec($cnf['git_path'] .' status -sb', $op); // Log current status.
-  if ($cnf['debug']) $output[] = $op;
+  $output[] = exec($cnf['git_path'] .' status -sb 2>&1', $op); // Log current status.
 
   if ($cnf['git_clean']) {
     $output[] = '# git clean -df #';
@@ -46,8 +45,8 @@ function gitpull_deploy($cnf = array()) {
   $output[] = '# git submodule status #';
   $output[] = exec($cnf['git_path'] .' submodule status 2>&1', $op);
 
-  $output[] = '## COMMAND chmod -R o-rx .git ##';
-  exec('chmod -R o-rx .git 2>&1', $op); // Remove read permissions for others.
+  $output[] = '# chmod -R o-rx .git #';
+  $output[] = exec('chmod -R o-rx .git 2>&1', $op); // Remove read permissions for others.
 
   // Drush options (break these out into their own script)
   if ($cnf['drush_fra']) {

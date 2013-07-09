@@ -21,7 +21,7 @@ if (file_exists(DEPLOY_ROOT .'/config.local.php')) {
 }
 
 // Relative path to the checkout root.
-define('DEPLOY_DOCROOT', '..');
+define('DEPLOY_DOCROOT', '.');
 
 // Path + name of the log file.
 define('DEPLOY_LOG_FILE', DEPLOY_ROOT .'/deploy.log');
