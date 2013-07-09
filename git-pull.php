@@ -20,36 +20,36 @@ function gitpull_deploy($cnf = array()) {
   $output[] = 'Docroot: '. shell_exec('pwd -P');
   $output[] = 'User: '. shell_exec('whoami'); // Log the script user.
 
-  $output[] = '# git status #';
-  exec(GIT_PATH .' status', $op); // Log current status.
+  $output[] = '# git status -sb #';
+  exec($cnf['git_path'] .' status -sb', $op); // Log current status.
   if ($cnf['debug']) $output[] = $op;
 
   if ($cnf['git_clean']) {
     $output[] = '# git clean -df #';
-    $output[] = exec(GIT_PATH .' clean -df 2>&1', $op); // Remove untracked files.
+    $output[] = exec($cnf['git_path'] .' clean -df 2>&1', $op); // Remove untracked files.
   }
 
   if ($cnf['git_reset']) {
     $output[] = '# git reset --hard HEAD #';
-    $output[] = exec(GIT_PATH .' reset --hard HEAD 2>&1', $op); // Reset any modified files.
+    $output[] = exec($cnf['git_path'] .' reset --hard HEAD 2>&1', $op); // Reset any modified files.
   }
 
   $output[] = '# git pull --rebase #';
-  $output[] = exec(GIT_PATH .' pull --rebase '. $cnf['git_remote'] .' '. $cnf['git_branch'] .' 2>&1', $op);
+  $output[] = exec($cnf['git_path'] .' pull --rebase '. $cnf['git_remote'] .' '. $cnf['git_branch'] .' 2>&1', $op);
 
   $output[] = '# git submodule sync #';
   $output[] = exec('git submodule sync 2>&1', $op);
 
   $output[] = '# git submodule update #';
-  $output[] = exec(GIT_PATH .' submodule update 2>&1', $op);
+  $output[] = exec($cnf['git_path'] .' submodule update 2>&1', $op);
 
   $output[] = '# git submodule status #';
-  $output[] = exec(GIT_PATH .' submodule status 2>&1', $op);
+  $output[] = exec($cnf['git_path'] .' submodule status 2>&1', $op);
 
   $output[] = '## COMMAND chmod -R o-rx .git ##';
   exec('chmod -R o-rx .git 2>&1', $op); // Remove read permissions for others.
 
-  // Drush options
+  // Drush options (break these out into their own script)
   if ($cnf['drush_fra']) {
     $output[] = '# drush fra -y '. $cnf['drush_site'] .' #';
     $output[] = exec($cnf['drush_path'] .' fra -y '. $cnf['drush_site'], $op);
@@ -132,4 +132,3 @@ function _gitpull_deploy_payload_branch($payload) {
     return FALSE;
   }
 }
-
