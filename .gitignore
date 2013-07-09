@@ -1,0 +1,5 @@
+# Ignore Log files.
+*.log
+
+# Exclude local config options
+config.local.php
