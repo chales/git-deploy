@@ -19,7 +19,7 @@ function deploy($cnf = array(), $post) {
   }
 
   // Check for access key, script will if it fails.
-  _deploy_access($post['key'], $cnf['access_key']);
+  _deploy_access($_REQUEST['key'], $cnf['access_key']);
 
   // Run the requirements check.
   if ($cnf['requirements']) {
