@@ -18,15 +18,18 @@ $config = array(
 
   // Git options
   'git_path' => 'git', // Git.
-  'git_branch' => 'develop', // Git branch that triggers a deploy.
+  'git_branch' => 'develop', // Git branch.
   'git_remote' => 'origin', // Git remote.
-  'git_clean' => TRUE, // Git clean.
-  'git_reset' => TRUE, // Git reset hard.
+  'git_clean' => TRUE, // Git clean - remove unracked files.
+  'git_reset' => TRUE, // Git reset hard - reset modified files.
 
   // Drush options (Can be refactored into it's own array for more commands)
   'drush_path' => '/usr/bin/drush', // drush binary.
   'drush_uri' => 'http://example.com', // Site uri for drush to target.
   'drush_fra' => FALSE, // Run features revert all.
+
+  // During setup leave TRUE to confirm and log the requirements.
+  'requirements' => TRUE,
 );
 
 // Set timezone for logging.

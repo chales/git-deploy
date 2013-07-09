@@ -9,9 +9,34 @@
  * Main function to execute the various deploy tasks.
  *
  * To Do: make dynamic for hooking.
+ *
+ * @param $cnf
+ *   Array of confiiguration options.
  */
+function deploy($cnf = array(), $post) {
+  if ($cnf['debug']) {
+    _deploy_log('Deploy Options: '. serialize($cnf), 'debug', FALSE);
+  }
 
-function deploy($cnf = array()) {
+  // Check for access key, script will if it fails.
+  _deploy_access($post['key'], $cnf['access_key']);
+
+  // Run the requirements check.
+  if ($cnf['requirements']) {
+    _deploy_requirements($cnf);
+  }
+
+  // Check the payload and branch.
+  $payload = _gitpull_deploy_payload_decode($post['payload'], $config['debug']);
+  $branch = _gitpull_deploy_payload_branch($payload);
+
+  // Branch matching
+  if (!$branch == $cnf['git_branch']) {
+    _deploy_log('Service Ping: '. $branch .' branch.', 'debug', FALSE);
+    return FALSE;
+  }
+
+  // Deploy steps
   gitpull_deploy($cnf);
 }
 
@@ -29,17 +54,9 @@ function deploy($cnf = array()) {
  * @param $type
  *   Basic notification warning levels. notice (default), error, crit, etc.
  * @param $print
- *   Whether to print the log message to the screen.
+ *   Whether or not to print the log message to the screen.
  */
 function _deploy_log($log_message = null, $type = 'notice', $print = TRUE) {
-  /*
-   * Accept timestamp as part of the log entry.
-  if (is_array($log_message)) {
-    date('[Y-m-d H:i:sP]') = key($log_entry);
-  } else {
-    $log_entry = date('[Y-m-d H:i:sP]');
-  }
-  */
   $log_entry = date('[Y-m-d H:i:sP]');
   $log_entry .= ' ['. $type .'] '. $log_message . PHP_EOL;
   if ($print) {
@@ -68,13 +85,16 @@ function _deploy_access($request_key, $access_key) {
 /**
  * Requirements check.
  *
+ * Verify the commands are available and proper versions are met.
+ *
  * To Do: Bust this up and clean it up.
  *
- * Verify the commands are available and proper versions are met.
+ * @param $cnf
+ *   Array of confiiguration options.
  */
-function _deploy_requirements() {
+function _deploy_requirements($cnf = array()) {
   $error = 0; // error checks
-  $prefix = '[git_update_requirements_check] ';
+  $prefix = '[git-pull_requirements] ';
 
   if (!is_dir(DEPLOY_DOCROOT)) { // Check for a specified docroot.
     _deploy_log($prefix .'Docroot is not a valid directory!', 'crit');
@@ -92,7 +112,7 @@ function _deploy_requirements() {
   }
 
   // Git checks
-  $git_check = exec(GIT_PATH .' --version', $git);
+  $git_check = exec($cnf['git_path'] .' --version', $git);
   $git_version_array = explode(' ', $git[0]);
   $git_min_version = '1.7';
 
@@ -105,7 +125,7 @@ function _deploy_requirements() {
     $error++;
   }
   else {
-    exec('git status', $output); // Log current status.
+    exec($cnf['git_path'] .' status', $output); // Check the current status.
   }
 
   // Process the git $output
@@ -120,12 +140,12 @@ function _deploy_requirements() {
         _deploy_log($prefix .'Error: The .git checkout containes untracked files.', 'crit');
         $error++;
       }
-      _deploy_log($line);
     }
   }
 
   // Drush checks.
-  $drush_check = exec(DRUSH_PATH .' version', $drush);
+  $prefix = '[drush_requirements] ';
+  $drush_check = exec($cnf['drush_path'] .' version', $drush);
   $drush_version_array = explode(' ', $drush[0]);
   $drush_min_version = '4.0';
 
@@ -139,7 +159,7 @@ function _deploy_requirements() {
   }
 
   if ($error) {
-    die($prefix .'Requirement Errors! Check the deploy log.');
+    die('Requirement Errors! Check the deploy log.');
   }
 
   return TRUE;
@@ -153,8 +173,7 @@ function _deploy_walkarray($array) {
 // Debug helper
 function _deploy_debug($var, $name='') {
   if (!$name) $name = 'Deploy Debug';
-  print'<pre>';
-  print $name .":\n";
+  print'<pre>'. $name .": ";
   print_r($var);
   print'</pre>';
 }
