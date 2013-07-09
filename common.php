@@ -42,7 +42,7 @@ function deploy($cnf = array(), $post) {
 }
 
 /**
- * Logging fucntion.
+ * Logging function.
  *
  * Errors are logged to the defined DEPLOY_DOCROOT. If something is very wrong
  * a PHP error is logged as well.
