@@ -15,7 +15,6 @@ function gitpull_deploy($cnf = array()) {
   $output = array();
 
   // Start the process
-  chdir(DEPLOY_DOCROOT);
   $output[] = '## Git Process Starting ##';
   $output[] = 'Docroot: '. shell_exec('pwd -P');
   $output[] = 'User: '. shell_exec('whoami'); // Log the script user.

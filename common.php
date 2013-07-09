@@ -14,6 +14,7 @@
  *   Array of confiiguration options.
  */
 function deploy($cnf = array(), $post) {
+  chdir(DEPLOY_DOCROOT);
   if ($cnf['debug']) {
     _deploy_log('Deploy Options: '. serialize($cnf), 'debug', FALSE);
   }
@@ -101,7 +102,6 @@ function _deploy_requirements($cnf = array()) {
     die($prefix .'Error: Docroot, check log.');
   }
 
-  chdir(DEPLOY_DOCROOT);
   // PHP checks
   $php_check = phpversion();
   $php_min_version = '5.2';
