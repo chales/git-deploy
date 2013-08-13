@@ -4,10 +4,11 @@ The main objective was to use a Git service hook to trigger a deployment (update
 
 I wanted to keep things fairly agnostic and keep it in simple procedural PHP so anyone with Drupal familiarity could easily read and follow along with the code. I’ve set things up with just a few options and sane defaults but have done a major rewrite on what started as a single file for it to be more flexible.
 
-For Drupal it can easily become be more integrated with Drush and have a module component to integrate the logging and status details into watchdog and the status page.
+For Drupal it could be more integrated with Drush and have a module component to integrate the logging and status details into watchdog and the status page.
 
 The scripts are currently publicly available on Github.
 https://github.com/chales/git-deploy
+
 Security
 A variable for “key” is used in requests as a basic security option and passed as part of the URL. This is to keep and outside source from triggering the deploy.
 
@@ -19,6 +20,7 @@ Requirements
 I’ve added a requirements check function to test for git, git version, drush, docroot, logging, php version, and a fer other sanity check items.
 
 This will be fleshed out more as we add more features, each with it’s own set.
+
 Configuration Options
 I’ve added some constants for the main set and forget parts of the script and an array for options to be passed into the various deploy functions.
 
@@ -148,7 +150,3 @@ Refine error logging and setup of accurate log levels. Add microtimes to _deploy
 Make the script OS agnostic, this is mainly Windows slashes.
 Modularize it? Logging could be sent to watchdog and the status page showing the last deploy.
 Add a diff as a first step to skip making any script execution even if the branches match.
-
-Notes
-
-My original (circa Drupal 5) manual deploy process doc with steps and a sort of setup structure - http://goo.gl/IqfMn

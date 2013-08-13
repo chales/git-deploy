@@ -2,4 +2,4 @@
 *.log
 
 # Exclude local config options
-config.local.php
+config.php
