@@ -145,7 +145,7 @@ function _deploy_requirements($cnf = array()) {
 
   // Drush checks.
   $prefix = '[drush_requirements] ';
-  $drush_check = exec($cnf['drush_path'] .' version', $drush);
+  $drush_check = exec($cnf['drush_path'] .' version 2>&1', $drush);
   $drush_version_array = explode(' ', $drush[0]);
   $drush_min_version = '4.0';
 

@@ -54,7 +54,7 @@ function gitpull_deploy($cnf = array()) {
   }
 
   $output[] = '# drush updb -y --uri='. $cnf['drush_uri'] .' #';
-  $output[] = exec($cnf['drush_path'] .' updb -y --uri='. $cnf['drush_uri'], $op);
+  $output[] = exec($cnf['drush_path'] .' updb -y --uri='. $cnf['drush_uri'] . ' 2>&1', $op);
 
   $output[] = '## Git Process Complete ##';
 
