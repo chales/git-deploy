@@ -16,7 +16,7 @@
 function deploy($cnf = array(), $post) {
   chdir(DEPLOY_DOCROOT);
   if ($cnf['debug']) {
-    _deploy_log('Deploy Options: '. serialize($cnf), 'debug', FALSE);
+    _deploy_log('Deploy Options: ' . serialize($cnf), 'debug', FALSE);
   }
 
   // Check for access key, script will if it fails.
@@ -33,7 +33,7 @@ function deploy($cnf = array(), $post) {
 
   // Branch matching
   if (!$branch == $cnf['git_branch']) {
-    _deploy_log('Service Ping: '. $branch .' branch.', 'debug', FALSE);
+    _deploy_log('Service Ping: ' . $branch . ' branch.', 'debug', FALSE);
     return FALSE;
   }
 
@@ -59,13 +59,13 @@ function deploy($cnf = array(), $post) {
  */
 function _deploy_log($log_message = null, $type = 'notice', $print = TRUE) {
   $log_entry = date('[Y-m-d H:i:sP]');
-  $log_entry .= ' ['. $type .'] '. $log_message . PHP_EOL;
+  $log_entry .= ' [' . $type . '] ' . $log_message . PHP_EOL;
   if ($print) {
     print nl2br($log_entry);
   }
 
   if (@file_put_contents(DEPLOY_LOG_FILE, $log_entry, FILE_APPEND) === FALSE) {
-    $msg = '[git-deploy] Log file error using: '. DEPLOY_LOG_FILE;
+    $msg = '[git-deploy] Log file error using: ' . DEPLOY_LOG_FILE;
     trigger_error($msg, E_USER_ERROR);
     die($msg);
   }
@@ -98,8 +98,8 @@ function _deploy_requirements($cnf = array()) {
   $prefix = '[git-pull_requirements] ';
 
   if (!is_dir(DEPLOY_DOCROOT)) { // Check for a specified docroot.
-    _deploy_log($prefix .'Docroot is not a valid directory!', 'crit');
-    die($prefix .'Error: Docroot, check log.');
+    _deploy_log($prefix . 'Docroot is not a valid directory!', 'crit');
+    die($prefix . 'Error: Docroot, check log.');
   }
 
   // PHP checks
@@ -107,7 +107,7 @@ function _deploy_requirements($cnf = array()) {
   $php_min_version = '5.2';
 
   if (!$php_check > $php_min_version) {
-    _deploy_log($prefix .'Error: PHP version is '. $php_check .'!', 'crit');
+    _deploy_log($prefix . 'Error: PHP version is ' . $php_check . '!', 'crit');
     $error++;
   }
 
@@ -117,27 +117,27 @@ function _deploy_requirements($cnf = array()) {
   $git_min_version = '1.7';
 
   if (!$git_check) {
-    _deploy_log($prefix .'Error: Git command not found!', 'crit');
+    _deploy_log($prefix . 'Error: Git command not found!', 'crit');
     $error++;
   }
   elseif ($git_version_array[2] < $git_min_version) {
-    _deploy_log($prefix .'Error: Git version is '. $git_version_array[2] .'.', 'crit');
+    _deploy_log($prefix . 'Error: Git version is ' . $git_version_array[2] . '.', 'crit');
     $error++;
   }
   else {
-    exec($cnf['git_path'] .' status', $output); // Check the current status.
+    exec($cnf['git_path'] . ' status', $output); // Check the current status.
   }
 
   // Process the git $output
-  foreach($output AS $line) {
+  foreach ($output AS $line) {
     $line = trim($line);
     if (!empty($line)) { // Is this a repo
       if (strpos($line, 'Not a git repository') !== FALSE) {
-        _deploy_log($prefix .'Error: The docroot does not contain a valid .git repository.', 'crit');
+        _deploy_log($prefix . 'Error: The docroot does not contain a valid .git repository.', 'crit');
         $error++;
       }
       elseif (strpos($line, 'Untracked files') !== FALSE) {  // Any untracked files?
-        _deploy_log($prefix .'Error: The .git checkout containes untracked files.', 'crit');
+        _deploy_log($prefix . 'Error: The .git checkout containes untracked files.', 'crit');
         $error++;
       }
     }
@@ -145,16 +145,16 @@ function _deploy_requirements($cnf = array()) {
 
   // Drush checks.
   $prefix = '[drush_requirements] ';
-  $drush_check = exec($cnf['drush_path'] .' version 2>&1', $drush);
+  $drush_check = exec($cnf['drush_path'] . ' version 2>&1', $drush);
   $drush_version_array = explode(' ', $drush[0]);
   $drush_min_version = '4.0';
 
   if (!$drush_check) { // Is Drush accessible?
-    _deploy_log($prefix .'Error: Drush not found!', 'crit');
+    _deploy_log($prefix . 'Error: Drush not found!', 'crit');
     $error++;
   }
   elseif ($drush_version_array[2] <= $drush_min_version) {  // Drush version check.
-    _deploy_log($prefix .'Error: Drush version is '. $drush_version_array[2] .'.', 'crit');
+    _deploy_log($prefix . 'Error: Drush version is ' . $drush_version_array[2] . '.', 'crit');
     $error++;
   }
 
@@ -177,7 +177,7 @@ function _deploy_walkarray($array) {
 // Debug helper
 function _deploy_debug($var, $name='') {
   if (!$name) $name = 'Deploy Debug';
-  print'<pre>'. $name .": ";
+  print'<pre>' . $name . ": ";
   print_r($var);
   print'</pre>';
 }

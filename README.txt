@@ -2,7 +2,7 @@ Script Details
 Basics
 The main objective was to use a Git service hook to trigger a deployment (update) whenever a commit is made against the branch your target site is using. i.e. if your staging site is running the develop branch then commits made to develop trigger an update.
 
-I wanted to keep things fairly agnostic and keep it in simple procedural PHP so anyone with Drupal familiarity could easily read and follow along with the code. I’ve set things up with just a few options and sane defaults but have done a major rewrite on what started as a single file for it to be more flexible.
+I wanted to keep things fairly agnostic and keep it in simple procedural PHP so anyone with Drupal familiarity could easily read and follow along with the code. I've set things up with just a few options and sane defaults but have done a major rewrite on what started as a single file for it to be more flexible.
 
 For Drupal it could be more integrated with Drush and have a module component to integrate the logging and status details into watchdog and the status page.
 
